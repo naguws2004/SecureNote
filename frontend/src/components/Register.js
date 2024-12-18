@@ -1,19 +1,24 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-function Register() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle registration logic here
-  };
-
+function Register({ name, setName, email, setEmail, password, setPassword, handleSubmit }) {
   return (
     <div className="Register">
       <h2>Registration</h2>
       <form onSubmit={handleSubmit}>
       <table>
+      <tr>
+            <td>
+              <label>Name:</label>
+            </td>
+            <td>
+              <input
+                type="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+            </td>
+          </tr>
           <tr>
             <td>
               <label>Email:</label>

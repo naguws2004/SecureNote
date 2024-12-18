@@ -56,7 +56,7 @@ textarea {
   margin: 10px;
   padding: 10px;
   width: 990px;
-  height: 550px;
+  height: 535px;
 }
 
 .note {
@@ -78,4 +78,14 @@ textarea {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
+}
+
+.note-form-header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center; 
+}
+
+.error {
+  color: red;
 }

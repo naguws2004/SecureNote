@@ -1,14 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle login logic here
-  };
-
+function Login({ email, setEmail, password, setPassword, handleSubmit }) {
   return (
     <div className="Login">
       <h2>Login</h2>

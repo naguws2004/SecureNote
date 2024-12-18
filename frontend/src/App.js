@@ -10,12 +10,11 @@ function App() {
       <div className="App">
         <header className="App-header">
           <Routes>
-            <Route path="/" element={<NotePage />} />
-          </Routes>
-          {/* <Routes>
             <Route path="/" element={<LoginPage />} />
+            <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
-          </Routes> */}
+            <Route path="/note" element={<NotePage />} />
+          </Routes>
         </header>
       </div>
     </Router>

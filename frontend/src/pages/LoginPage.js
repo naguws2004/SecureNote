@@ -1,31 +1,44 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Routes, Link } from 'react-router-dom';
-import Login from '../components/Login';
+import { useNavigate, Link } from 'react-router-dom';
+import { login } from '../services/authService';
+import LoginComponent from '../components/Login';
 
 function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log('Email:', email);
-    console.log('Password:', password);
+    try {
+      const userInfo = await login(email, password);
+      setError('');
+      console.log(`Name: ${userInfo.Name}`);
+      console.log(`Email: ${userInfo.email}`);
+      console.log(`Password: ${userInfo.password}`);
+      navigate('/note', { state: { name: userInfo.Name, email: userInfo.email } });
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   return (
-    <div className="LoginPage">
-      <Login 
-        email={email} 
-        setEmail={setEmail} 
-        password={password} 
-        setPassword={setPassword} 
-        handleSubmit={handleSubmit} 
-      />
-      <br />
-      <Link to="/register">
-        <button>Go To Registration</button>
-      </Link>
+    <div>
+      {error && <div className='error'>{error}</div>}
+      <div className="LoginPage">
+        <LoginComponent 
+          email={email} 
+          setEmail={setEmail} 
+          password={password} 
+          setPassword={setPassword} 
+          handleSubmit={handleSubmit} 
+        />
+        <br />
+        <Link to="/register">
+          <button>Go To Registration</button>
+        </Link>
+      </div>
     </div>
   );
 }
