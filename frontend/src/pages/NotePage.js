@@ -5,19 +5,20 @@ import { createNote, updateNote, deleteNote, getNotes } from '../services/noteSe
 import NoteComponent from '../components/Note';
 
 function NotePage() {
+  const [error, setError] = useState('');
   const [notes, setNotes] = useState([]);
   const [note, setNote] = useState('');
   const [id, setId] = useState(0);
-  const [error, setError] = useState('');
-  const [isUpdateMode, setIsUpdateMode] = useState(false);
-  const navigate = useNavigate();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [token, setToken] = useState('');
+  const [isUpdateMode, setIsUpdateMode] = useState(false);
+  const navigate = useNavigate();
   const timeoutRef = useRef(null);
   
   const fetchNotes = async () => {
     try {
-      const fetchedNotes = await getNotes();
+      const fetchedNotes = await getNotes(token);
       const filteredNotes = fetchedNotes.filter(note => note.email === email);
       setNotes(filteredNotes);
       handleReset();
@@ -27,15 +28,17 @@ function NotePage() {
   };
 
   useEffect(() => {
-    const userCookie = Cookies.get('user');
+    const userCookie = Cookies.get('userInfo');
     if (!userCookie) {
       alert('User is not logged in');
       navigate('/');
       return;
     }
     const user = JSON.parse(userCookie);
-    setName(user.name);
+    console.log(user.token);
+    setName(user.Name);
     setEmail(user.email);
+    setToken(user.token);
     fetchNotes();
   }, [email]);
 
@@ -76,7 +79,7 @@ function NotePage() {
     }
     try {
       const noteData = { email: email, note: note };
-      await createNote(noteData);
+      await createNote(token, noteData);
       alert('Note created successfully');
       fetchNotes();
     } catch (err) {
@@ -91,7 +94,7 @@ function NotePage() {
     }
     try {
       const noteData = { email: email, note: note };
-      await updateNote(id, noteData);
+      await updateNote(token, id, noteData);
       alert('Note updated successfully');
       // Fetch notes again to update the list
       fetchNotes();
@@ -106,7 +109,7 @@ function NotePage() {
       return;
     }
     try {
-      await deleteNote(id);
+      await deleteNote(token, id);
       alert('Note deleted successfully');
       // Fetch notes again to update the list
       fetchNotes();

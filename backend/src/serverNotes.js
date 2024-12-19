@@ -1,4 +1,5 @@
 const express = require('express');
+const jwt = require('jsonwebtoken');
 const db = require('./db');
 
 class ServerNotes {
@@ -11,6 +12,24 @@ class ServerNotes {
 
     setupMiddleware() {
         this.app.use(express.json());
+    }
+
+    // Middleware to validate JWT token
+    validateToken(req, res, next) {
+        const authHeader = req.headers['authorization'];
+        const token = authHeader && authHeader.split(' ')[1];
+        
+        if (!token) {
+            return res.sendStatus(401); // Unauthorized
+        }
+
+        jwt.verify(token, 'your_jwt_secret', (err, user) => {
+            if (err) {
+                return res.sendStatus(403); // Forbidden
+            }
+            req.user = user;
+            next();
+        });
     }
 
     setupRoutes() {
@@ -38,7 +57,7 @@ class ServerNotes {
          *       500:
          *         description: An error occurred while fetching the notes
          */
-        this.app.get('/api/notes', (req, res) => {
+        this.app.get('/api/notes', this.validateToken, (req, res) => {
             db.query('SELECT * FROM notes', (err, results) => {
                 if (err) {
                     console.error('Error fetching from MySQL:', err);
@@ -79,7 +98,7 @@ class ServerNotes {
          *       500:
          *         description: An error occurred while retrieving the note
          */
-        this.app.get('/api/notes/:id', (req, res) => {
+        this.app.get('/api/notes/:id', this.validateToken, (req, res) => {
             const { id } = req.params;
             db.query('SELECT * FROM notes WHERE id = ?', [id], (err, results) => {
                 if (err) {
@@ -116,7 +135,7 @@ class ServerNotes {
          *       500:
          *         description: An error occurred while creating the note
          */
-        this.app.post('/api/notes', (req, res) => {
+        this.app.post('/api/notes', this.validateToken, (req, res) => {
             const { email, note } = req.body;
             db.query('INSERT INTO notes (email, note) VALUES (?, ?)', [email, note], (err, results) => {
                 if (err) {
@@ -156,7 +175,7 @@ class ServerNotes {
          *       500:
          *         description: An error occurred while updating the note
          */
-        this.app.put('/api/notes/:id', (req, res) => {
+        this.app.put('/api/notes/:id', this.validateToken, (req, res) => {
             const { id } = req.params;
             const { email, note } = req.body;
             db.query('UPDATE notes SET email = ?, note = ? WHERE id = ?', [email, note, id], (err, results) => {
@@ -186,7 +205,7 @@ class ServerNotes {
          *       500:
          *         description: An error occurred while deleting the note
          */
-        this.app.delete('/api/notes/:id', (req, res) => {
+        this.app.delete('/api/notes/:id', this.validateToken, (req, res) => {
             const { id } = req.params;
             db.query('DELETE FROM notes WHERE id = ?', [id], (err, results) => {
                 if (err) {
@@ -198,7 +217,9 @@ class ServerNotes {
         });
     }
 
-    start() {}
+    start() {
+        console.log(`Notes routes ready`);
+    }
 }
 
 module.exports = ServerNotes;

@@ -11,7 +11,7 @@ function LoginPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    Cookies.remove('user'); // Remove the cookie when the component mounts
+    Cookies.remove('userInfo'); // Remove the cookie when the component mounts
   }, []);
 
   const handleSubmit = async (e) => {
@@ -19,10 +19,7 @@ function LoginPage() {
     try {
       const userInfo = await login(email, password);
       setError('');
-      console.log(`Name: ${userInfo.Name}`);
-      console.log(`Email: ${userInfo.email}`);
-      console.log(`Password: ${userInfo.password}`);
-      Cookies.set('user', JSON.stringify({ name: userInfo.Name, email: userInfo.email }), { expires: 1 }); // Set cookie for 1 day
+      Cookies.set('userInfo', JSON.stringify(userInfo), { expires: 1 }); // Set token cookie for 1 day
       alert('Logged in successfully');
       navigate('/note');
     } catch (err) {

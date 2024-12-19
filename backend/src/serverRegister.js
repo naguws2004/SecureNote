@@ -53,7 +53,9 @@ class ServerRegister {
         });
     }
     
-    start() {}
+    start() {
+        console.log(`Register routes ready`);
+    }
 }
 
 module.exports = ServerRegister;

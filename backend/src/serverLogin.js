@@ -1,5 +1,6 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const db = require('./db');
 
 class ServerLogin {
@@ -74,7 +75,9 @@ class ServerLogin {
                 for (const user of results) {
                     isMatch = await bcrypt.compare(password, user.password);
                     if (isMatch) {
-                        return res.status(200).json(user);
+                        // Generate JWT token
+                        const token = jwt.sign({ id: user.id, name: user.Name, email: user.email }, 'your_jwt_secret', { expiresIn: '1h' });
+                        return res.status(200).json({ ...user, token });
                     }
                 }
                 if (!isMatch) return res.status(404).send('User not found');
@@ -82,7 +85,9 @@ class ServerLogin {
         });
     }
     
-    start() {}
+    start() {
+        console.log(`Login routes ready`);
+    }
 }
 
 module.exports = ServerLogin;

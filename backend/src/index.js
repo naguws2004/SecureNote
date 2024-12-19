@@ -26,6 +26,20 @@ function setupSwagger() {
                 description: 'This is the API documentation for the Secure Note application.', // Updated description
                 version: '1.0.0',
             },
+            components: {
+                securitySchemes: {
+                    bearerAuth: {
+                        type: 'http',
+                        scheme: 'bearer',
+                        bearerFormat: 'JWT',
+                    },
+                },
+            },
+            security: [
+                {
+                    bearerAuth: [],
+                },
+            ],
         },
         apis: ['./src/serverRegister.js', './src/serverLogin.js', './src/serverNotes.js', './src/serverUsers.js'], // Path to the API docs
     };

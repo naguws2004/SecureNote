@@ -206,7 +206,9 @@ class ServerUsers {
         });
     }
     
-    start() {}
+    start() {
+        console.log(`Users routes ready`);
+    }
 }
 
 module.exports = ServerUsers;
