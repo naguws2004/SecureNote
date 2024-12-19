@@ -1,14 +1,14 @@
 import React from 'react';
 
-function Note({ name, notes, note, setNote, handleLogout, handleCreateNote, handleReset, handleNoteClick, isUpdateMode }) {
+function Note({ name, notes, note, setNote, handleLogout, handleCreateNote, handleUpdateNote, handleDeleteNote, handleReset, handleNoteClick, isUpdateMode }) {
   return (
     <div className="note">
       <div className="note-list">
         <h2>Notes</h2>
         {Array.isArray(notes) && notes.length > 0 ? (
           notes.map((element, index) => (
-            <div key={element.id}>
-              <a href="#" onClick={() => handleNoteClick(element.id)}>Note {element.id}</a>
+            <div style={{ cursor: 'pointer', textDecoration: 'underline' }} key={element.id} onClick={() => handleNoteClick(element.id)}>
+              Note {element.id}
             </div>
           ))
         ) : (
@@ -34,8 +34,8 @@ function Note({ name, notes, note, setNote, handleLogout, handleCreateNote, hand
             <td>
               <button onClick={handleReset}>Reset</button>&nbsp;
               <button onClick={handleCreateNote} disabled={isUpdateMode}>Create</button>&nbsp;
-              <button disabled={!isUpdateMode}>Update</button>&nbsp;
-              <button disabled={!isUpdateMode}>Delete</button>
+              <button onClick={handleUpdateNote} disabled={!isUpdateMode}>Update</button>&nbsp;
+              <button onClick={handleDeleteNote} disabled={!isUpdateMode}>Delete</button>
             </td>
           </tr>
         </table>

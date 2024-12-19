@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import Cookies from 'js-cookie';
 import { login } from '../services/authService';
 import LoginComponent from '../components/Login';
 
@@ -9,6 +10,10 @@ function LoginPage() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
+  useEffect(() => {
+    Cookies.remove('user'); // Remove the cookie when the component mounts
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -17,7 +22,9 @@ function LoginPage() {
       console.log(`Name: ${userInfo.Name}`);
       console.log(`Email: ${userInfo.email}`);
       console.log(`Password: ${userInfo.password}`);
-      navigate('/note', { state: { name: userInfo.Name, email: userInfo.email } });
+      Cookies.set('user', JSON.stringify({ name: userInfo.Name, email: userInfo.email }), { expires: 1 }); // Set cookie for 1 day
+      alert('Logged in successfully');
+      navigate('/note');
     } catch (err) {
       setError(err.message);
     }

@@ -1,4 +1,5 @@
 const express = require('express');
+const bcrypt = require('bcrypt');
 const db = require('./db');
 
 class ServerRegister {
@@ -39,9 +40,10 @@ class ServerRegister {
          *       500:
          *         description: An error occurred while registering the user
          */
-        this.app.post('/api/register', (req, res) => {
+        this.app.post('/api/register', async (req, res) => {
             const { name, email, password } = req.body;
-            db.query('INSERT INTO users (name, email, password) VALUES (?, ?, ?)', [name, email, password], (err, results) => {
+            const hashedPassword = await bcrypt.hash(password, 10);
+            db.query('INSERT INTO users (name, email, password) VALUES (?, ?, ?)', [name, email, hashedPassword], (err, results) => {
                 if (err) {
                     console.error('Error inserting into MySQL:', err);
                     return res.status(500).send('An error occurred while registering the user');

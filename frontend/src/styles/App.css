@@ -86,6 +86,11 @@ textarea {
   align-items: center; 
 }
 
+.clickable {
+  cursor: 'pointer';
+  text-decoration: 'underline';
+}
+
 .error {
   color: red;
 }
